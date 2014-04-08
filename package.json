@@ -1,0 +1,15 @@
+{
+  "name": "kitt-dev-server",
+  "version": "1.0.7",
+  "private": true,
+  "dependencies": {
+    "express": "*",
+    "jade": "*",
+    "watch" : "*",
+    "temp" : "*",
+    "async" : "*",
+    "nstore" : "*",
+    "underscore" : "*",
+    "crx" : "*"
+  }
+}

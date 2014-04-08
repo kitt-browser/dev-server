@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  if extlist.length == 0
+    p No extensions
+  else
+    each item in extlist
+      hr
+      .extension
+        img(
+          src= 'icon/'+item.id,
+          onclick=client_version?"document.location.href='"+installbase+item.id+"'":''
+          width=50
+          ).icon
+
+        h3.title #{item.name}
+        span version: #{item.version}
+        p #{item.description}
+        h3
+          a(href= installbase + item.id) Install
+          | &nbsp;
+          a(href= downloadbase + item.id) Download
