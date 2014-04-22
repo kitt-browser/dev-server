@@ -1,0 +1,28 @@
+{
+  "name": "kitt-dev-server",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "./node_modules/.bin/mocha **/*.spec.coffee --compilers coffee:coffee-script/register"
+  },
+  "dependencies": {
+    "body-parser": "~1.0.0",
+    "coffee-script": "^1.7.1",
+    "cookie-parser": "~1.0.1",
+    "crx": "^0.4.2",
+    "debug": "~0.7.4",
+    "express": "~4.0.0",
+    "jade": "~1.3.0",
+    "morgan": "~1.0.0",
+    "q": "^1.0.1",
+    "static-favicon": "~1.0.0",
+    "temp": "^0.7.0"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "mocha": "^1.18.2",
+    "sinon": "^1.9.1",
+    "sinon-chai": "^2.5.0"
+  }
+}
