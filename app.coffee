@@ -4,9 +4,10 @@ favicon = require("static-favicon")
 logger = require("morgan")
 cookieParser = require("cookie-parser")
 bodyParser = require("body-parser")
+config = require('config')
 
 routes = require("./routes/index")
-users = require("./routes/users")
+extensions = require('./lib/extensions')
 
 
 app = express()
@@ -47,5 +48,7 @@ app.use (err, req, res, next) ->
     message: err.message
     error: {}
 
+extensions.loadExtensions(
+  config.extensions.root, '/tmp/', config.extensions.privateKey)
 
 module.exports = app
