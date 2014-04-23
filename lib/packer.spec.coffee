@@ -33,7 +33,7 @@ describe "packer", ->
     it "should be a method", ->
       packer.pack.should.be.a.function
 
-    it "should create a `crx` file in the output directory", ->
+    it "should create a `crx` file", ->
       packer.pack('test/fixtures/packer', 'test/fixtures/key.pem', outFile)
         .then ->
           stat(outFile)
