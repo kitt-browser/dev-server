@@ -14,14 +14,22 @@ defaultExtensionConfig = require('./extConfigDefaults')
 # Load all extensions in `dir/`, turn them into `.crx` files and put them in
 # `crxDir/`.
 loadExtensions = (dir, crxDir, privateKey = null) ->
+  debug 'loading extensions from', dir
   privateKey or= path.join(dir, 'key.pem')
+
   # We assume each subdirectory is one extension.
-  getSubdirs(dir).then (subdirs) ->
-    # Return a promise for an array of packed extension info.
-    extensionsInfo = subdirs.map (extDir) ->
-      debug('extension subdir', extDir)
-      loadExtension extDir, crxDir, privateKey
-    Q.all extensionsInfo
+  extensionsMetadata = _getSubdirs(dir)
+    .then (subdirs) ->
+
+      # Return a promise for an array of packed extension info.
+      Q.allSettled subdirs.map (extDir) ->
+        debug('Loading extension dir', extDir)
+        loadExtension extDir, crxDir, privateKey
+
+    .then (items) ->
+      return (item.value for item in items when item.state == 'fulfilled')
+
+  return extensionsMetadata
     
 
 loadExtension = (extRootDir, crxDir, privateKey) ->
@@ -29,14 +37,16 @@ loadExtension = (extRootDir, crxDir, privateKey) ->
   crxFile = null
   manifest = null
 
-  getExtensionConfig(extRootDir)
+  _getExtensionConfig(extRootDir)
     .then (cfg) ->
+      debug('config loaded for %s', extRootDir)
       extBuildDir = path.join(extRootDir, cfg.buildDir)
       # TODO: Run minification, JSHint etc.
-      readManifest(extBuildDir)
+      _readManifest(extBuildDir)
 
     # Create the `crx` file.
     .then (_manifest) ->
+      debug('manifest loaded for %s', extRootDir)
       manifest = _manifest
       crxFile = path.join(crxDir, "#{manifest.name}.crx")
       packer.pack(extBuildDir, privateKey, crxFile)
@@ -49,9 +59,13 @@ loadExtension = (extRootDir, crxDir, privateKey) ->
       crx: crxFile
     }
 
+    .fail (err) ->
+      console.error("Error loading extension from #{extRootDir}", err)
+      Q.reject err
+
 
 # Returns promise for an array of all (nonhidden) direct subdirs of `dir`.
-getSubdirs = (dir) ->
+_getSubdirs = (dir) ->
   subdirs = []
   promise = qfs.listTree dir, (path, stat) ->
     if path == dir
@@ -66,14 +80,14 @@ getSubdirs = (dir) ->
 
 
 # Returns promise for JS object read from `manifest.json` in `dir`.
-readManifest = (dir) ->
+_readManifest = (dir) ->
   manifest = path.join(dir, 'manifest.json')
   qfs.read(manifest).then JSON.parse
 
 
 # Returns promise for extension specific configuration (`kitt.yml`
 # merged with defaults).
-getExtensionConfig = (extDir) ->
+_getExtensionConfig = (extDir) ->
   cfgFile = path.join(extDir, 'kitt.yml')
   qfs.exists(cfgFile)
     .then (exists) ->
@@ -83,3 +97,4 @@ getExtensionConfig = (extDir) ->
 
 
 exports.loadExtensions = loadExtensions
+exports.loadExtension = loadExtension

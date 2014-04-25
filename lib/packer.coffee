@@ -1,21 +1,28 @@
 Q = require('q')
 _ = require('underscore')
-crx = require('crx')
+ChromeExt = require('crx')
 debug = require('debug')('kitt-dev:packer')
-fs = require('fs')
+qfs = require('q-io/fs')
 
 # Packs the contents of `inputDir` into `outputFile` (using `privateKey`).
 pack = (inputDir, privateKey, outputFile) ->
-  _crx = new crx {
-    rootDirectory: inputDir
-    privateKey: privateKey
-  }
+  crx = null
 
-  return Q.ninvoke(_crx, 'pack')
-    .then (data) ->
-      Q.ninvoke fs, 'writeFile', outputFile, data
-    .finally ->
-      # Cleanup the temp dir.
-      _crx.destroy()
+  qfs.read(privateKey).then (key) ->
+    crx = new ChromeExt {
+      rootDirectory: inputDir
+      privateKey: key
+    }
+
+    Q.ninvoke(crx, 'pack')
+  
+  .then (data) ->
+    debug('sucessfully packed %s', inputDir)
+    qfs.write outputFile, data
+  
+  .finally ->
+    # Cleanup the temp dir.
+    debug('cleaning tmp dir for %s', inputDir)
+    crx.destroy()
 
 exports.pack = pack

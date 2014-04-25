@@ -48,7 +48,18 @@ app.use (err, req, res, next) ->
     message: err.message
     error: {}
 
+app.set 'extensions', []
+# TODO: Use a real temporary folder!
+app.set 'extensionTempDir', '/tmp'
+
 extensions.loadExtensions(
-  config.extensions.root, '/tmp/', config.extensions.privateKey)
+    config.extensions.root,
+    app.get('extensionTempDir')
+    config.extensions.privateKey)
+  .then (metadata) ->
+    console.log 'metadata loaded', metadata
+    app.set 'extensions', metadata
+  .done()
+
 
 module.exports = app

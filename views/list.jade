@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  if settings.extensions.length == 0
+    p No extensions
+  else
+    each item in settings.extensions
+      hr
+      .extension
+        img(
+          src= 'icon/'+item.name,
+          onclick=client_version?"document.location.href='"+installbase+item.id+"'":''
+          width=50
+          ).icon
+
+        h3.title #{item.name}
+        span version: #{item.version}
+        p #{item.description}
+        h3
+          a(href='kitt://' + host + '/download/' + item.name) Install
+          | &nbsp;
+          a(href='/download/' + item.name) Download
+
