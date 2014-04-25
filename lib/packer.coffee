@@ -13,7 +13,6 @@ pack = (inputDir, privateKey, outputFile) ->
       rootDirectory: inputDir
       privateKey: key
     }
-
     Q.ninvoke(crx, 'pack')
   
   .then (data) ->

@@ -5,12 +5,18 @@ logger = require("morgan")
 cookieParser = require("cookie-parser")
 bodyParser = require("body-parser")
 config = require('config')
+temp = require('temp')
+Q = require('q')
+qfs = require('q-io/fs')
+
+debug = require('debug')('kitt-dev:app')
 
 routes = require("./routes/index")
-extensions = require('./lib/extensions')
 
 
 app = express()
+
+app.set('port', process.env.PORT || 3000)
 
 # view engine setup
 app.set "views", path.join(__dirname, "views")
@@ -48,18 +54,11 @@ app.use (err, req, res, next) ->
     message: err.message
     error: {}
 
-app.set 'extensions', []
-# TODO: Use a real temporary folder!
-app.set 'extensionTempDir', '/tmp'
 
-extensions.loadExtensions(
-    config.extensions.root,
-    app.get('extensionTempDir')
-    config.extensions.privateKey)
-  .then (metadata) ->
-    console.log 'metadata loaded', metadata
-    app.set 'extensions', metadata
-  .done()
+require('./initializers')(app)
+  .then ->
+    server = app.listen app.get('port'), ->
+      debug('Express server listening on port ' + server.address().port)
 
 
 module.exports = app
