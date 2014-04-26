@@ -11,7 +11,8 @@ qfs = require('q-io/fs')
 
 debug = require('debug')('kitt-dev:app')
 
-routes = require("./routes/index")
+watcher = require('./lib/watcher')
+routes = require('./routes/index')
 
 
 app = express()
@@ -59,6 +60,9 @@ require('./initializers')(app)
   .then ->
     server = app.listen app.get('port'), ->
       debug('Express server listening on port ' + server.address().port)
+    watcher.init(config.extensions.root, app)
+
+  .done()
 
 
 module.exports = app

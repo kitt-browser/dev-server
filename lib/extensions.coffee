@@ -11,57 +11,63 @@ _ = require('underscore')
 defaultExtensionConfig = require('./extConfigDefaults')
 
 
-# Load all extensions in `dir/`, turn them into `.crx` files and put them in
-# `crxDir/`.
+# Load all extensions in `dir`, turn them into `.crx` files, store in `crxDir`
+# and return the metadata.
 loadExtensions = (dir, crxDir, privateKey = null) ->
   debug 'loading extensions from', dir
   privateKey or= path.join(dir, 'key.pem')
 
-  # We assume each subdirectory is one extension.
-  extensionsMetadata = _getSubdirs(dir)
-    .then (subdirs) ->
+  # We assume each subdirectory equals one extension.
+  qExtensionsMetadata = _getSubdirs(dir).then (subdirs) ->
+    # Return a promise for an array of extension metadata.
+    Q.allSettled subdirs.map (extDir) ->
+      debug('Loading extension dir', extDir)
+      loadExtension extDir, crxDir, privateKey
 
-      # Return a promise for an array of packed extension info.
-      Q.allSettled subdirs.map (extDir) ->
-        debug('Loading extension dir', extDir)
-        loadExtension extDir, crxDir, privateKey
+  # Only return successully loaded extensions.
+  qSuccessful = qExtensionsMetadata.then (items) ->
+    return (item.value for item in items when item.state == 'fulfilled')
 
-    .then (items) ->
-      return (item.value for item in items when item.state == 'fulfilled')
-
-  return extensionsMetadata
+  return qSuccessful
     
 
+# Packes the extension in `extRootDir` into crx in  `crxDir`.
+# Returns extension metadata object.
 loadExtension = (extRootDir, crxDir, privateKey) ->
   extBuildDir = null
   crxFile = null
   manifest = null
 
-  _getExtensionConfig(extRootDir)
-    .then (cfg) ->
-      debug('config loaded for %s', extRootDir)
-      extBuildDir = path.join(extRootDir, cfg.buildDir)
-      # TODO: Run minification, JSHint etc.
-      _readManifest(extBuildDir)
+  qCfg = _getExtensionConfig(extRootDir)
+    
+  # Load `manifest.json` to get extension metadata.
+  qManifest = qCfg.then (cfg) ->
+    debug('config loaded for %s', extRootDir)
+    extBuildDir = path.join(extRootDir, cfg.buildDir)
+    # TODO: Run minification, JSHint etc.
+    _readManifest(extBuildDir)
 
-    # Create the `crx` file.
-    .then (_manifest) ->
-      debug('manifest loaded for %s', extRootDir)
-      manifest = _manifest
-      crxFile = path.join(crxDir, "#{manifest.name}.crx")
-      packer.pack(extBuildDir, privateKey, crxFile)
+  # Create the `crx` file.
+  qPackingDone = qManifest.then (_manifest) ->
+    debug('manifest loaded for %s', extRootDir)
+    manifest = _manifest
+    crxFile = path.join(crxDir, "#{manifest.name}.crx")
+    packer.pack(extBuildDir, privateKey, crxFile)
 
-    # Compile the extension metadata.
-    .then -> {
-      name: manifest.name
-      version: manifest.version
-      description: manifest.description
-      crx: crxFile
-    }
+  # Compile the extension metadata.
+  qMetadata = qPackingDone.then -> {
+    name: manifest.name
+    version: manifest.version
+    description: manifest.description
+    crx: crxFile
+  }
 
-    .fail (err) ->
-      console.error("Error loading extension from #{extRootDir}", err)
-      Q.reject err
+  # Log failures.
+  qMetadata.fail (err) ->
+    debug("Error loading extension from #{extRootDir}", err)
+    Q.reject err
+
+  return qMetadata
 
 
 # Returns promise for an array of all (nonhidden) direct subdirs of `dir`.
@@ -90,8 +96,10 @@ _readManifest = (dir) ->
 _getExtensionConfig = (extDir) ->
   cfgFile = path.join(extDir, 'kitt.yml')
   qfs.exists(cfgFile)
+    # Load `kitt.yml` or `{}` if there's none.
     .then (exists) ->
       if exists then qfs.read(cfgFile).then(yaml.safeLoad) else {}
+    # Set undef values to defaults.
     .then (cfg) ->
       _.defaults(cfg, defaultExtensionConfig)
 
