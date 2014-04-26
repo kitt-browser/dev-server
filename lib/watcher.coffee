@@ -6,6 +6,7 @@ config = require('config')
 _ = require('underscore')
 
 
+# Do not watch those (would be too many files...).
 IGNORED = [
   '.git'
   'node_modules'
@@ -39,14 +40,18 @@ init = (rootDir, app, callback = ->) ->
     tmpDir = app.get('extensionTempDir')
     key = config.extensions.privateKey
 
+    # Let's upsert the extensions metadata list with the new (or updated) extension.
     extensions.loadExtension(extDirAbs, tmpDir, key)
+
       .then (metadata) ->
         exts = app.get 'extensions'
         upsertedExtension = _.findWhere(exts, name: metadata.name)
         newExts = _.without(exts, upsertedExtension)
         newExts.push metadata
+
         app.set 'extensions', newExts
         debug "Extension metadata list updated."
+
         callback null, metadata
 
       .fail (err) ->
