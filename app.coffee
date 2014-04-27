@@ -66,6 +66,8 @@ require('./initializers')(app)
   .then ->
     # Start watching the extensions directory.
     watcher.init config.extensions.root, app, (err, metadata) ->
+      if err
+        return
       # Tell the client to update the list.
       io.sockets.emit 'update', {metadata: metadata}
 
