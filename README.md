@@ -15,7 +15,7 @@ Kitt Development Server
 
 **Then in `exts` subfolder**:
 
-1. Make a subfolder for your addon. Please don't use shitespaces in the folder
+1. Make a subfolder for your addon. Please don't use whitespaces in the folder
    name. Just don't.
 
 2. Start creating your addon in the folder as you would a Chrome extension.
