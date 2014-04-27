@@ -1,4 +1,3 @@
 #!/usr/bin/env node
-var debug = require('debug')('my-application');
 require('coffee-script/register');
 var app = require('../app');
