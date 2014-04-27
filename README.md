@@ -31,6 +31,13 @@ Kitt Development Server
 5. The website is updated automatically whenever anything changes so there's no
    need to reload.
 
+## IMPORTANT!
+
+**PROVIDED KEY.PEM IS ONLY FOR INITIAL TESTING!**
+
+**REPLACE WITH YOUR OWN PRIVATE KEY!**
+
+
 ## Optional per-extension configuration
 If you wish to override the default configuration for your extension (for
 example because you want to preprocess your source code and build into .e.g.
@@ -39,11 +46,7 @@ directory (it has to be in your extension directory root).
 
 Available options:
 
- * buildDir: subdirectory of your extension directory which should be watched
+ * `buildDir`: subdirectory of your extension directory which should be watched
    for changes instead of root. The CRX packer will pack the contents of this
    directory when change is detected.
    
-**PROVIDED KEY.PEM IS ONLY FOR INITIAL TESTING!**
-
-**REPLACE WITH YOUR OWN PRIVATE KEY!**
-
