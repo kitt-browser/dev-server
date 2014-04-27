@@ -15,8 +15,8 @@ Kitt Development Server
 
 **Then in `exts` subfolder**:
 
-1. Make a subfolder for your addon. The addon bundle (download) will be named
-   as the folder, so be reasonable about the name. No spaces and wild chars.
+1. Make a subfolder for your addon. Please don't use shitespaces in the folder
+   name. Just don't.
 
 2. Start creating your addon in the folder as you would a Chrome extension.
    
