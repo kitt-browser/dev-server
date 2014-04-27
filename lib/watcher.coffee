@@ -4,6 +4,7 @@ path = require('path')
 extensions = require('./extensions')
 config = require('config')
 _ = require('underscore')
+Q = require('q')
 
 
 # Do not watch those (would be too many files...).

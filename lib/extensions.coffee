@@ -55,13 +55,20 @@ loadExtension = (extRootDir, crxDir, privateKey) ->
     packer.pack(extBuildDir, privateKey, crxFile)
 
   # Compile the extension metadata.
-  qMetadata = qPackingDone.then -> {
-    name: manifest.name
-    version: manifest.version
-    icon: path.resolve(path.join(extBuildDir, _.values(manifest.icons)[0]))
-    description: manifest.description
-    crx: crxFile
-  }
+  qMetadata = qPackingDone.then ->
+    icon = _.values(manifest.icons)[0]
+    if not icon
+      iconUrl = null
+    else
+      iconUrl = path.resolve(path.join(extBuildDir, icon))
+    return {
+      name: manifest.name
+      author: manifest.author
+      version: manifest.version
+      icon: iconUrl
+      description: manifest.description
+      crx: crxFile
+    }
 
   # Log failures.
   qMetadata.fail (err) ->

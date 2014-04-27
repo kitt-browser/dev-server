@@ -14,7 +14,8 @@ block content
           ).icon
 
         h3.title #{item.name}
-        span version: #{item.version}
+        div version: #{item.version}
+        div author: #{item.author || 'unknown'}
         p #{item.description}
         h3
           a(href='kitt://' + host + '/extension/' + item.name + '/download') Install

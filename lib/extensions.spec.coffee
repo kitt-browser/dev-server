@@ -29,11 +29,13 @@ describe "extensions", ->
           crx: "/tmp/ephemeral/Test1-name.crx"
           description: "Test1 description"
           name: "Test1-name"
+          icon: null
           version: "0.9"
         ,
           crx: "/tmp/ephemeral/Test2-name.crx"
           description: "Test2 description"
           name: "Test2-name"
+          icon: null
           version: "1.0.1"
         ])
         packer.pack.should.have.been.calledTwice
@@ -57,6 +59,7 @@ describe "extensions", ->
           crx: "/tmp/ephemeral/test-with-config.crx"
           description: "Test1 description"
           name: "test-with-config"
+          icon: null
           version: "0.9"
         ])
         packer.pack.should.have.been.calledOnce
