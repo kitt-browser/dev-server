@@ -2,6 +2,14 @@ doctype html
 html
   head
     title= title
+    script(src="/socket.io/socket.io.js")
+    script(type="text/javascript").
+      var URL = window.location.protocol + "//" + window.location.host;
+      var socket = io.connect(URL);
+      socket.on('update', function (data) {
+        console.log('updated', data);
+        window.location.reload();
+      });
   body
     h1.title #{title}
     block content

@@ -8,6 +8,10 @@ config = require('config')
 temp = require('temp')
 Q = require('q')
 qfs = require('q-io/fs')
+sio = require('socket.io')
+
+# Socket.io connected object (listening on the same port as server).
+io = null
 
 debug = require('debug')('kitt-dev:app')
 
@@ -59,15 +63,17 @@ app.use (err, req, res, next) ->
 # Initialize everything.
 require('./initializers')(app)
 
+  .then ->
+    # Start watching the extensions directory.
+    watcher.init config.extensions.root, app, (err, metadata) ->
+      # Tell the client to update the list.
+      io.sockets.emit 'update', {metadata: metadata}
+
   # Start the server.
   .then ->
     server = app.listen app.get('port'), ->
       debug('Express server listening on port ' + server.address().port)
-
-  .then ->
-    # Start watching the extensions directory.
-    watcher.init config.extensions.root, app, (err, metadata) ->
-
+    io = sio.listen(server)
 
   .done()
 
