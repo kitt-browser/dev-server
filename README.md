@@ -20,9 +20,9 @@ Kitt Development Server
 
 2. Start creating your addon in the folder as you would a Chrome extension.
    
-3. Server will observe your folder and re-pack extension everytime you make a
+3. Server will observe your folder and re-pack the extension everytime you make a
    change (please note that changes in `.git` and `node_modules` directories
-   are ignored in order to prevent too many files to be watched).
+   are ignored in order to prevent too many files from being watched).
 
 4. Server gives you two links:
      Install: use in Kitt browser
