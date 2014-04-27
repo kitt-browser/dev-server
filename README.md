@@ -25,8 +25,8 @@ Kitt Development Server
    are ignored in order to prevent too many files from being watched).
 
 4. Server gives you two links:
-     Install: use in Kitt browser
-     Download: get the CRX file generated on the fly
+     * Install: use in Kitt browser
+     * Download: get the CRX file generated on the fly
 
 5. The website is updated automatically whenever anything changes so there's no
    need to reload.
