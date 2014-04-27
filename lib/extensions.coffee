@@ -63,7 +63,7 @@ loadExtension = (extRootDir, crxDir, privateKey) ->
       iconUrl = path.resolve(path.join(extBuildDir, icon))
     return {
       name: manifest.name
-      author: manifest.author
+      author: manifest.author or null
       version: manifest.version
       icon: iconUrl
       description: manifest.description
