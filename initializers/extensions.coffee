@@ -1,3 +1,11 @@
+# Extensions initializer
+# ======================
+# Reads the extension directory (specified in config) and load all the
+# extensions.
+#
+# Sets `extensionTempDir` (where to store the packed crx files) and
+# `extensions` (list of extensions metadata) app global vars.
+
 temp = require('temp').track()
 Q = require('q')
 qfs = require('q-io/fs')

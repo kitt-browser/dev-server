@@ -66,7 +66,8 @@ require('./initializers')(app)
 
   .then ->
     # Start watching the extensions directory.
-    watcher.init(config.extensions.root, app)
+    watcher.init config.extensions.root, app, (err, metadata) ->
+
 
   .done()
 

@@ -58,6 +58,7 @@ loadExtension = (extRootDir, crxDir, privateKey) ->
   qMetadata = qPackingDone.then -> {
     name: manifest.name
     version: manifest.version
+    icon: path.resolve(path.join(extBuildDir, _.values(manifest.icons)[0]))
     description: manifest.description
     crx: crxFile
   }
