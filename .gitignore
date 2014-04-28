@@ -2,4 +2,4 @@
 /npm-debug.log
 /exts
 /tmp
-
+/config/runtime.json

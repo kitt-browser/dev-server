@@ -15,7 +15,9 @@ router.get '/', (req, res) ->
 router.get '/extensions/:name/download', (req, res, next) ->
   name = req.params.name
   res.set 'Content-Type', 'application/x-chrome-extension'
-  res.set('Content-Disposition', "attachment; filename=\"#{name}.crx\"")
+  res.set 'Content-Disposition', "attachment; filename=\"#{name}.crx\""
+  # Note: If the file doesn't exist, the 404 error handler will take
+  # care of it.
   res.download path.join(req.app.get('extensionTempDir'), "#{name}.crx")
 
 
