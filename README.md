@@ -10,7 +10,7 @@ Kitt Development Server
 1. `git checkout https://github.com/kitt-browser/dev-server.git`
 2. `cd dev-server`
 3. `npm install`
-4. `node start` (default port is 3000, you can change it by setting `PORT` env
+4. `npm start` (default port is 3000, you can change it by setting `PORT` env
    var)
 
 **Then in `exts` subfolder**:
