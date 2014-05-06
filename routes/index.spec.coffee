@@ -23,7 +23,7 @@ describe "index route", ->
         .expect('Content-Disposition', 'attachment; filename="dummy.crx"')
         .expect(200, done)
 
-    it.only "should return HTTP for a non-existing extension", (done) ->
+    it "should return HTTP for a non-existing extension", (done) ->
       request(app)
         .get('/extensions/iamnothere/download')
         .expect(404, done)
