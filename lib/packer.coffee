@@ -22,6 +22,6 @@ pack = (inputDir, privateKey, outputFile) ->
   .finally ->
     # Cleanup the temp dir.
     debug('cleaning tmp dir for %s', inputDir)
-    crx.destroy()
+    crx?.destroy()
 
 exports.pack = pack
