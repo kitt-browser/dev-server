@@ -8,8 +8,11 @@ describe "index route", ->
 
   routes = require('./index')
 
-  app = express()
-  app.use "/", routes
+  app = null
+  
+  beforeEach -> 
+    app = express()
+    app.use "/", routes
 
   describe "/extensions/:name/download", ->
 

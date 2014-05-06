@@ -5,11 +5,24 @@ router = express.Router()
 qfs = require('q-io/fs')
 _ = require('underscore')
 debug = require('debug')('kitt-com:routes')
+util = require('util')
 
 
 # GET home page.
 router.get '/', (req, res) ->
-  res.render 'list', { title: 'Express', host: req.headers.host }
+  res.redirect '/list'
+
+
+# Show list of extensions.
+router.get '/list', (req, res) ->
+  res.render 'list', { title: 'Kitt Dev Server', host: req.headers.host }
+
+
+# Show extension debug logs in the console.
+router.post '/logger', (req, res) ->
+  return res.send 500 unless req.body?
+  util.log "#{req.body.addon}|#{req.body.origin}|#{req.body.message}"
+  res.send 200
 
 
 router.get '/extensions/:name/download', (req, res, next) ->
