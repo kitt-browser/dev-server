@@ -56,9 +56,8 @@ init = (rootDir, app, callback = ->) ->
         callback null, metadata
 
       .fail (err) ->
-        debug("Failed to pack extension", err)
+        debug("Error: Failed to pack extension", err)
         callback err
-        Q.reject(err)
 
       .done()
 
