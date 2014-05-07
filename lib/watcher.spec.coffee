@@ -24,15 +24,17 @@ describe "watcher", ->
 
     beforeEach ->
       app = express()
-      return Q.ninvoke(temp, 'mkdir', 'kitt-extensions-test').then (dir) ->
-        tmpDir = dir
-
-    it "should repack the affected extension on fs event", (done) ->
       app.set 'extensions', []
-      app.set 'extensionTempDir', tmpDir
-      sinon.spy extensions, 'loadExtension'
+      watcher.init 'test/fixtures/exts', app
+      return Q.ninvoke(temp, 'mkdir', 'kitt-extensions-test')
+        .then (dir) ->
+          tmpDir = dir
+          app.set 'extensionTempDir', tmpDir
 
-      watcher.init 'test/fixtures/exts', app, ->
+    it "should repack the affected extension on fs event", sinon.test (done) ->
+      this.spy extensions, 'loadExtension'
+
+      app.on 'extensions:updated', ->
         extensions.loadExtension.should.have.been.calledWith('test/fixtures/exts/test1',
           tmpDir,
           path.resolve(config.extensions.privateKey)
@@ -43,4 +45,9 @@ describe "watcher", ->
       setTimeout ->
         touch.sync('test/fixtures/exts/test1/background.js', {nocreate: true})
       , 150
+
+    it "should emit error event on failure", sinon.test (done) ->
+      this.stub(extensions, 'loadExtension').returns Q.reject(new Error('foo'))
+      app.on 'extensions:error', ->
+        done()
 

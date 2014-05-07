@@ -10,6 +10,7 @@ Q = require('q')
 qfs = require('q-io/fs')
 sio = require('socket.io')
 
+
 # Socket.io connected object (listening on the same port as server).
 io = null
 
@@ -65,19 +66,20 @@ require('./initializers')(app)
 
   .then ->
     # Start watching the extensions directory.
-    watcher.init config.extensions.root, app, (err, metadata) ->
-      if err
-        return
-      # Tell the client to update the list.
-      io.sockets.emit 'update', {metadata: metadata}
+    watcher.init config.extensions.root, app
 
-  # Start the server.
-  .then ->
+    # Start the server.
     server = app.listen app.get('port'), ->
       debug('Express server listening on port ' + server.address().port)
     io = sio.listen(server)
+    io.set 'log level', 1
 
   .done()
+
+
+app.on 'extensions:updated', (metadata) ->
+  io?.sockets.emit 'update', {metadata: metadata}
+
 
 
 module.exports = app

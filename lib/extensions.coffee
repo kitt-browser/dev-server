@@ -13,9 +13,8 @@ defaultExtensionConfig = require('./extConfigDefaults')
 
 # Load all extensions in `dir`, turn them into `.crx` files, store in `crxDir`
 # and return the metadata.
-loadExtensions = (dir, crxDir, privateKey = null) ->
+loadExtensions = (dir, crxDir, privateKey) ->
   debug 'loading extensions from', dir
-  privateKey or= path.join(dir, 'key.pem')
 
   # We assume each subdirectory equals one extension.
   qExtensionsMetadata = _getSubdirs(dir).then (subdirs) ->
@@ -67,6 +66,7 @@ loadExtension = (extRootDir, crxDir, privateKey) ->
       version: manifest.version
       icon: iconUrl
       description: manifest.description
+      sourcePath: path.resolve(extBuildDir)
       crx: crxFile
     }
 

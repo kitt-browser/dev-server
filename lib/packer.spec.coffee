@@ -1,4 +1,4 @@
-temp = require('temp')
+temp = require('temp').track()
 path = require('path')
 fs = require('fs')
 Q = require('q')

@@ -13,6 +13,13 @@ router.get '/', (req, res) ->
   res.redirect '/list'
 
 
+router.get '/extension/:name/(*)', (req, res) ->
+  filepath = req.params[0]
+  ext = _.findWhere req.app.get('extensions'), name: req.params.name
+  return res.send(404) unless ext?
+  res.sendfile path.join(ext.sourcePath, filepath)
+
+
 # Show list of extensions.
 router.get '/list', (req, res) ->
   res.render 'list', { title: 'Kitt Dev Server', host: req.headers.host }

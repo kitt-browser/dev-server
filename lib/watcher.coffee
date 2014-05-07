@@ -53,11 +53,11 @@ init = (rootDir, app, callback = ->) ->
         app.set 'extensions', newExts
         debug "Extension metadata list updated."
 
-        callback null, metadata
+        app.emit('extensions:updated', metadata)
 
       .fail (err) ->
         debug("Error: Failed to pack extension", err)
-        callback err
+        app.emit('extensions:error', err)
 
       .done()
 

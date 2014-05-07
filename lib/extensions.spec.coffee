@@ -5,6 +5,7 @@ chai.use require('sinon-chai')
 chai.should()
 Q = require('q')
 packer = require('./packer')
+path = require('path')
 
 describe "extensions", ->
 
@@ -22,8 +23,9 @@ describe "extensions", ->
       extensions.loadExtensions.should.be.a.function
 
     it "should pack all extension in the dir folder", ->
+      extDir = path.resolve('test/fixtures/exts')
       extensions.loadExtensions(
-        'test/fixtures/exts', '/tmp/ephemeral/', 'test/fixtures/key.pem'
+        extDir, '/tmp/ephemeral/', 'test/fixtures/key.pem'
       ).then (res) ->
         res.should.eql([
           crx: "/tmp/ephemeral/Test1-name.crx"
@@ -31,6 +33,7 @@ describe "extensions", ->
           name: "Test1-name"
           icon: null
           author: null
+          sourcePath: path.resolve("test/fixtures/exts/test1")
           version: "0.9"
         ,
           crx: "/tmp/ephemeral/Test2-name.crx"
@@ -38,22 +41,24 @@ describe "extensions", ->
           name: "Test2-name"
           icon: null
           author: null
+          sourcePath: path.resolve("test/fixtures/exts/test2")
           version: "1.0.1"
         ])
         packer.pack.should.have.been.calledTwice
         packer.pack.should.have.been.calledWith(
-          'test/fixtures/exts/test1',
+          path.join(extDir, 'test1'),
           'test/fixtures/key.pem',
           '/tmp/ephemeral/Test1-name.crx')
         packer.pack.should.have.been.calledWith(
-          'test/fixtures/exts/test2',
+          path.join(extDir, 'test2'),
           'test/fixtures/key.pem',
           '/tmp/ephemeral/Test2-name.crx')
 
 
     it "should respect the extensions-specific config", ->
+      extDir = path.resolve('test/fixtures/exts-with-config')
       extensions.loadExtensions(
-        'test/fixtures/exts-with-config',
+        extDir,
         '/tmp/ephemeral/',
         'test/fixtures/key.pem'
       ).then (res) ->
@@ -63,10 +68,11 @@ describe "extensions", ->
           name: "test-with-config"
           icon: null
           author: null
+          sourcePath: path.join(extDir, "test1", "build")
           version: "0.9"
         ])
         packer.pack.should.have.been.calledOnce
         packer.pack.should.have.been.calledWith(
-          'test/fixtures/exts-with-config/test1/build',
+          path.join(extDir, "test1", "build"),
           'test/fixtures/key.pem',
           '/tmp/ephemeral/test-with-config.crx')
