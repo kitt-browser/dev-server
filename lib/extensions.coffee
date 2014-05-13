@@ -27,7 +27,7 @@ loadExtensions = (dir, crxDir, privateKey) ->
           console.log("Failed to process extension #{extDir}", err)
           return null
 
-  return qExtensionsMetadata
+  return Q.all(qExtensionsMetadata)
     
 
 # Packes the extension in `extRootDir` into crx in  `crxDir`.
