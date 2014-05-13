@@ -50,7 +50,7 @@ process.on 'uncaughtException', (error) ->
     console.warn("""\n\n
       Oops, this is embarassing but I'm going to crash now. Sorry!
 
-      I'm crashing becuase it seems there's too many files in one of your \
+      I'm crashing because it seems there's too many files in one of your \
       extension directories. I'm just a tiny process and I can't handle that.
 
       Maybe you forgot to add a 'kitt.yml' file with \
