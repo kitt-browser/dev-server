@@ -4,11 +4,7 @@ favicon = require("static-favicon")
 logger = require("morgan")
 cookieParser = require("cookie-parser")
 bodyParser = require("body-parser")
-config = require('config')
-temp = require('temp')
 Q = require('q')
-qfs = require('q-io/fs')
-sio = require('socket.io')
 
 Q.longStackSupport = true
 
@@ -82,25 +78,9 @@ app.use (err, req, res, next) ->
     message: err.message
     error: {}
 
-
-# Initialize everything.
-require('./initializers')(app)
-
-  .then ->
-    # Start watching the extensions directory.
-    watcher.init config.extensions.root, app
-
-    # Start the server.
-    server = app.listen app.get('port'), ->
-      debug('Express server listening on port ' + server.address().port)
-    io = sio.listen(server)
-    io.set 'log level', 1
-
+# Start the app.
+require('./main').init(app)
+  .then -> debug("Application initialized and running...")
   .done()
-
-
-app.on 'extensions:updated', (metadata) ->
-  io?.sockets.emit 'update', {metadata: metadata}
-
 
 module.exports = app

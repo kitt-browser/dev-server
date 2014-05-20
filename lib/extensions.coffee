@@ -48,7 +48,7 @@ loadExtension = (extRootDir, crxDir, privateKey) ->
 
   # Create the `crx` file.
   qPackingDone = qManifest.then (_manifest) ->
-    debug('manifest loaded for %s', extRootDir)
+    debug('manifest loaded for %s', extRootDir, crxDir)
     manifest = _manifest
     crxFile = path.join(crxDir, "#{manifest.name}.crx")
     packer.pack(extBuildDir, privateKey, crxFile)
@@ -113,4 +113,3 @@ _getExtensionConfig = (extDir) ->
 
 
 exports.loadExtensions = loadExtensions
-exports.loadExtension = loadExtension

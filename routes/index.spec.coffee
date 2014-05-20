@@ -4,27 +4,35 @@ sinon = require('sinon')
 request = require('supertest')
 express = require('express')
 {loadExtensions} = require('../lib/extensions')
+Q = require('q')
+temp = require('temp').track()
+config = require('config')
 
 describe "index route", ->
 
   routes = require('./index')
 
   app = null
+  mkdirTmp = Q.denodeify temp.mkdir
   
   beforeEach ->
     app = express()
     app.use "/", routes
 
-  describe "/extensions/:name/download", ->
+  beforeEach ->
+    mkdirTmp('route-test').then (dir) ->
+      app.set 'extensionTempDir', dir
+      loadExtensions('test/fixtures/exts', dir, config.extensions.privateKey)
+    .then (metadata) ->
+        app.set 'extensions', metadata
 
-    beforeEach ->
-      app.set 'extensionTempDir', 'test/fixtures/dummy_crx'
+  describe "/extensions/:name/download", ->
 
     it "should serve the right extension", (done) ->
       request(app)
-        .get('/extensions/dummy/download')
+        .get('/extensions/Test1-name/download')
         .expect('Content-Type', 'application/x-chrome-extension')
-        .expect('Content-Disposition', 'attachment; filename="dummy.crx"')
+        .expect('Content-Disposition', 'attachment; filename="Test1-name.crx"')
         .expect(200, done)
 
     it "should return HTTP 404 for a non-existing extension", (done) ->
@@ -33,12 +41,6 @@ describe "index route", ->
         .expect(404, done)
 
   describe "/extension/:name/*", ->
-
-    extInitializer = require('../initializers/extensions')
-
-    beforeEach ->
-      # Make sure extensions-related app globals are set.
-      extInitializer(app)
 
     it "should serve the extension resource", (done) ->
       request(app)
