@@ -26,18 +26,18 @@ describe "index route", ->
     .then (metadata) ->
         app.set 'extensions', metadata
 
-  describe "/extensions/:name/download", ->
+  describe "/extensions/download/:name", ->
 
     it "should serve the right extension", (done) ->
       request(app)
-        .get('/extensions/Test1-name/download')
+        .get('/extensions/download/Test1-name')
         .expect('Content-Type', 'application/x-chrome-extension')
         .expect('Content-Disposition', 'attachment; filename="Test1-name.crx"')
         .expect(200, done)
 
     it "should return HTTP 404 for a non-existing extension", (done) ->
       request(app)
-        .get('/extensions/iamnothere/download')
+        .get('/extensions/download/iamnothere')
         .expect(404, done)
 
   describe "/extension/:name/*", ->
