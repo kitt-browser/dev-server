@@ -32,7 +32,7 @@ router.post '/logger', (req, res) ->
   res.send 200
 
 
-router.get '/extensions/:name/download', (req, res, next) ->
+router.get '/extensions/download/:name', (req, res, next) ->
   name = req.params.name
   res.set 'Content-Type', 'application/x-chrome-extension'
   res.set 'Content-Disposition', "attachment; filename=\"#{name}.crx\""
@@ -41,7 +41,7 @@ router.get '/extensions/:name/download', (req, res, next) ->
   res.download path.join(req.app.get('extensionTempDir'), "#{name}.crx")
 
 
-router.get '/extensions/:name/icon', (req, res, next) ->
+router.get '/extensions/icon/:name', (req, res, next) ->
   metadata = _.findWhere req.app.get('extensions'), name: req.params.name
   return res.send(404, "Unknown extension") unless metadata
   res.download metadata.icon
