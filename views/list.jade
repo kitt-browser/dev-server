@@ -8,7 +8,7 @@ block content
       hr
       .extension
         img(
-          src= '/extensions/' + item.name + '/icon',
+          src= '/extensions/icon/' + item.name,
           onclick=client_version?"document.location.href='"+installbase+item.id+"'":''
           width=50
           ).icon
@@ -18,7 +18,7 @@ block content
         div author: #{item.author || 'unknown'}
         p #{item.description}
         h3
-          a(href='kitt://' + host + '/extensions/' + item.name + '/download') Install
+          a(href='kitt://' + host + '/extensions/download/' + item.name) Install
           | &nbsp;
-          a(href='/extensions/' + item.name + '/download') Download
+          a(href='/extensions/download/' + item.name) Download
 
