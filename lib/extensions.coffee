@@ -19,15 +19,17 @@ loadExtensions = (dir, crxDir, privateKey) ->
   # We assume each subdirectory equals one extension.
   qExtensionsMetadata = _getSubdirs(dir).then (subdirs) ->
     # Return a promise for an array of extension metadata.
-    _.compact subdirs.map (extDir) ->
+    Q.allSettled subdirs.map (extDir) ->
       debug('Loading extension dir', extDir)
       loadExtension(extDir, crxDir, privateKey)
         .fail (err) ->
           # Just print an error and ignore the extension.
-          console.log("Failed to process extension #{extDir}", err)
-          return null
+          debug("Failed to process extension #{extDir}", err)
+          return Q.reject(err)
+  qExtensionsMetadata = qExtensionsMetadata.then (items) ->
+    return (item.value for item in items when item.state == 'fulfilled')
 
-  return Q.all(qExtensionsMetadata)
+  return qExtensionsMetadata
     
 
 # Packes the extension in `extRootDir` into crx in  `crxDir`.
