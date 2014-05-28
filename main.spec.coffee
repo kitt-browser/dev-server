@@ -33,7 +33,7 @@ describe "main", ->
   afterEach ->
     sandbox.restore()
 
-  describe.only "init", ->
+  describe "init", ->
 
     it "should create a temp dir for storing generated crx files", ->
       main.init(app).then ->

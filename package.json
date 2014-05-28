@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node_modules/.bin/gulp develop",
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha **/*.spec.coffee --compilers coffee:coffee-script/register"
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha *.spec.coffee **/*.spec.coffee --compilers coffee:coffee-script/register"
   },
   "dependencies": {
     "body-parser": "^1.0.0",
