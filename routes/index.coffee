@@ -24,14 +24,6 @@ router.get '/extension/:name/(*)', (req, res) ->
 router.get '/list', (req, res) ->
   res.render 'list', { title: 'Kitt Dev Server', host: req.headers.host }
 
-
-# Show extension debug logs in the console.
-router.post '/logger', (req, res) ->
-  return res.send 500 unless req.body?
-  util.log "#{req.body.addon}|#{req.body.origin}|#{req.body.message}"
-  res.send 200
-
-
 router.get '/extensions/download/:name', (req, res, next) ->
   name = req.params.name
   res.set 'Content-Type', 'application/x-chrome-extension'
@@ -45,6 +37,9 @@ router.get '/extensions/icon/:name', (req, res, next) ->
   metadata = _.findWhere req.app.get('extensions'), name: req.params.name
   return res.send(404, "Unknown extension") unless metadata
   res.download metadata.icon
+
+
+router.use '/logger', require('./logger')
 
 
 module.exports = router

@@ -26,8 +26,7 @@ app.set('port', process.env.PORT || 3000)
 app.set "views", path.join(__dirname, "views")
 app.set "view engine", "jade"
 app.use favicon()
-# Uncomment me to see HTTP requests logs.
-#app.use logger("dev")
+app.use logger("dev")
 app.use bodyParser.json()
 app.use bodyParser.urlencoded()
 app.use cookieParser()
