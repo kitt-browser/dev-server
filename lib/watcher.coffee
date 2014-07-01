@@ -9,9 +9,12 @@ emitter = new EventEmitter()
 
 
 # Do not watch those (would be too many files...).
+#
+# Note: chokidar doesn't like it when grunt-crx removes its tmp dir (https://github.com/paulmillr/chokidar/issues/133). So we're adding `tmp` to the ignored directories until that's resolved.
 IGNORED = [
   '.git'
   'node_modules'
+  'tmp/crx-'
 ]
 
 

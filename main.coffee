@@ -1,16 +1,15 @@
 config = require('config')
 temp = require('temp').track()
-{loadExtensions} = require('./lib/extensions')
-{startWatching} = require('./lib/watcher')
+extensions = require('./lib/extensions')
+watcher = require('./lib/watcher')
 Q = require('q')
 sio = require('socket.io')
 debug = require('debug')('kitt-dev:main')
 
 
-makeTmpDir = Q.denodeify(temp.mkdir)
-
 
 exports.init = (app) ->
+  makeTmpDir = Q.denodeify(temp.mkdir)
 
   # This function:
   # 1. Reloads all the extensions from the disk (and packs them into `crx` files).
@@ -18,7 +17,7 @@ exports.init = (app) ->
   #    extensions).
   # 3. Sends `update` to clients connected via websockets.
   refreshExtensions = (dir) ->
-    loadExtensions(config.extensions.root, dir, config.extensions.privateKey)
+    extensions.loadExtensions(config.extensions.root, dir, config.extensions.privateKey)
       .then (metadata) ->
         app.set 'extensions', metadata
         app.get('io')?.sockets.emit 'update', {metadata: metadata}
@@ -42,9 +41,10 @@ exports.init = (app) ->
       io.set 'log level', 1
       app.set 'io', io
 
-      watchEmitter = startWatching(config.extensions.root, {debounce: 500})
+      watchEmitter = watcher.startWatching(config.extensions.root, {debounce: 500})
 
       watchEmitter.on 'extensions:updated', ->
         refreshExtensions(app.get('extensionTempDir'))
+      debug('all done')
 
   return qRunning

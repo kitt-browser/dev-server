@@ -16,7 +16,7 @@ Kitt Development Server
 **Then in `exts` subfolder**:
 
 1. Make a subfolder for your addon. Please don't use whitespaces in the folder
-   name. Just don't.
+   name. You can use a symlink too.
 
 2. Start creating your addon in the folder as you would a Chrome extension.
    
@@ -30,6 +30,11 @@ Kitt Development Server
 
 5. The website is updated automatically whenever anything changes so there's no
    need to reload.
+
+### Setting `EXTENSION_DIR_ROOT`
+If you don't want to use `exts/` subfolder to develop your extensions, you can
+set the `EXTENSION_DIR_ROOT` environmental variable and point it to the absolute
+path of a folder where your extensions subfolders are located.
 
 ## IMPORTANT!
 

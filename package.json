@@ -2,10 +2,12 @@
   "name": "kitt-dev-server",
   "main": "bin/www",
   "version": "0.0.1",
-  "private": true,
+  "engines" : {
+    "node" : ">=0.10.0"
+  },
   "scripts": {
     "start": "node_modules/.bin/gulp develop",
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha **/*.spec.coffee --compilers coffee:coffee-script/register"
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha *.spec.coffee **/*.spec.coffee --compilers coffee:coffee-script/register"
   },
   "dependencies": {
     "body-parser": "1.0.0",
@@ -25,17 +27,17 @@
     "socket.io": "0.9.16",
     "static-favicon": "1.0.0",
     "temp": "0.7.0",
-    "underscore": "^1.6.0"
+    "underscore": "1.6.0"
   },
   "devDependencies": {
     "chai": "1.9.1",
-    "chai-as-promised": "^4.1.1",
+    "chai-as-promised": "4.1.1",
     "gulp": "3.6.2",
     "gulp-nodemon": "1.0.2",
     "mocha": "1.18.2",
     "sinon": "1.9.1",
     "sinon-chai": "2.5.0",
-    "supertest": "^0.11.0",
+    "supertest": "0.11.0",
     "touch": "0.0.3"
   }
 }
