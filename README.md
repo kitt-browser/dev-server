@@ -33,8 +33,8 @@ Kitt Development Server
 
 ### Setting `EXTENSION_DIR_ROOT`
 If you don't want to use `exts/` subfolder to develop your extensions, you can
-set the `EXTENSION_DIR_ROOT` environmental variable and point it to the absloute
-of a folder where your extensions subfolders are stored.
+set the `EXTENSION_DIR_ROOT` environmental variable and point it to the absolute
+path of a folder where your extensions subfolders are located.
 
 ## IMPORTANT!
 
