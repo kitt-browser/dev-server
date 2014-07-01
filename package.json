@@ -2,7 +2,9 @@
   "name": "kitt-dev-server",
   "main": "bin/www",
   "version": "0.0.1",
-  "private": true,
+  "engines" : {
+    "node" : ">=0.10.0"
+  },
   "scripts": {
     "start": "node_modules/.bin/gulp develop",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha *.spec.coffee **/*.spec.coffee --compilers coffee:coffee-script/register"
