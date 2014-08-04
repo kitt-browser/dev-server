@@ -1,9 +1,7 @@
 Kitt Development Server
 =======================
 
-**Consult the [Kitt online documentation](https://github.com/kitt-browser/dev-docs) for more information on the subset of the Chrome Platform APIs that is currently supported. We do not support the full manifest format or the full set of `chrome.*` APIs, but we are adding new features regularly.**
-
------------
+Consult the [Kitt online documentation](https://github.com/kitt-browser/dev-docs) for more information on the subset of the Chrome Platform APIs that is currently supported. We do not support the full manifest format or the full set of `chrome.*` APIs, but we are adding new features regularly.
 
 ## Setting up the development server
 
