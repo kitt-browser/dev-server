@@ -9,6 +9,7 @@ debug = require('debug')('kitt-dev:main')
 
 
 exports.init = (app) ->
+  console.log "main running"
   makeTmpDir = Q.denodeify(temp.mkdir)
 
   # This function:
