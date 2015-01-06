@@ -19,25 +19,26 @@ describe "index route", ->
     app = express()
     app.use "/", routes
 
-  beforeEach ->
+  beforeEach (done) ->
     mkdirTmp('route-test').then (dir) ->
       app.set 'extensionTempDir', dir
       loadExtensions('test/fixtures/exts', dir, config.extensions.privateKey)
     .then (metadata) ->
-        app.set 'extensions', metadata
+      app.set 'extensions', metadata
+      done()
 
-  describe "/extensions/download/:name", ->
+  describe "/install/:name", ->
 
     it "should serve the right extension", (done) ->
       request(app)
-        .get('/extensions/download/Test1-name')
+        .get('/install/Test1-name')
         .expect('Content-Type', 'application/x-chrome-extension')
         .expect('Content-Disposition', 'attachment; filename="Test1-name.crx"')
         .expect(200, done)
 
     it "should return HTTP 404 for a non-existing extension", (done) ->
       request(app)
-        .get('/extensions/download/iamnothere')
+        .get('/install/iamnothere')
         .expect(404, done)
 
   describe "/extension/:name/*", ->
