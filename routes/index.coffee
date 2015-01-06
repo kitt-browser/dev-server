@@ -32,7 +32,7 @@ router.post '/logger', (req, res) ->
   res.send 200
 
 
-router.get '/extensions/download/:name', (req, res, next) ->
+router.get '/install/:name', (req, res, next) ->
   name = req.params.name
   res.set 'Content-Type', 'application/x-chrome-extension'
   res.set 'Content-Disposition', "attachment; filename=\"#{name}.crx\""
